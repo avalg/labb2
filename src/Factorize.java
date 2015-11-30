@@ -1,9 +1,11 @@
 import java.math.BigInteger;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Factorize {
-    int[] apperances;
-    int counter;
+    static int[] apperances;
+    static int counter;
     public static void main(String[] args) {
         // read in the number
         Scanner reader = new Scanner(System.in);
@@ -15,49 +17,51 @@ public class Factorize {
             counter = 0;
 
             for (int i = 0; i < answer.size(); i++) {
-                System.out.println(answer[i]+ "^" +apperances[i]);
+                System.out.println(answer.get(i)+ "^" +apperances[i]);
             }
         }
     }
 
-    private List<BigInteger> primeFactor(BigInteger n){
+    private static List<BigInteger> addToAnswer(BigInteger b, List<BigInteger> answer) {
+        if(answer.contains(b)){
+            int i = answer.indexOf(b);
+            apperances[i]++;
+        }else {
+            answer.add(b);
+            apperances[counter] = 1;
+            counter++;
+        }
+        return answer;
+    }
+
+    private static List<BigInteger> primeFactor(BigInteger n){
         List<BigInteger> answer = new ArrayList<BigInteger>();
         BigInteger two = BigInteger.valueOf(2);
 
-        if(n.compareTo(2) < 0){
+        if(n.compareTo(two) < 0){
             return null;
         }
 
         while (n.and(BigInteger.ONE).equals(BigInteger.ZERO)) {
             n = n.shiftRight(1);
-            if(answer.contains(two)){
-                int i = answer.indexOf(two);
-                apperances[i]++;
-            }else {
-                answer.add(two);
-                apperances[counter] = 1;
-                counter++;
-            }
+            answer = addToAnswer(two, answer);
         }
 
         //left with odd values
-        if (!a.equals(BigInteger.ONE)) {
+        if (!n.equals(BigInteger.ONE)) {
             BigInteger b = BigInteger.valueOf(3);
-            while (b.compareTo(a) < 0) {
+            while (b.compareTo(n) < 0) {
                 if (b.isProbablePrime(10)) {
-                    BigInteger[] dr = a.divideAndRemainder(b);
+                    BigInteger[] dr = n.divideAndRemainder(b);
                     if (dr[1].equals(BigInteger.ZERO)) {
-                        result.add(b);
-                        a = dr[0];
+                        answer = addToAnswer(b, answer);
+                        n = dr[0];
                     }
                 }
                 b = b.add(two);
             }
-            result.add(b); //b will always be prime here...
+            answer = addToAnswer(b, answer); //b will always be prime here...
         }
-
-
-
 
         return answer;
     }
