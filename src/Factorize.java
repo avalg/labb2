@@ -12,12 +12,14 @@ public class Factorize {
         String s = reader.next();
         while(!s.equals("0")) {
             apperances = new int[30];
-            BigInteger n = s;
+            BigInteger n = new BigInteger(s);
             List<BigInteger> answer = primeFactor(n);
             counter = 0;
 
-            for (int i = 0; i < answer.size(); i++) {
-                System.out.println(answer.get(i)+ "^" +apperances[i]);
+            if (answer != null) {
+                for (int i = 0; i < answer.size(); i++) {
+                    System.out.println(answer.get(i)+ "^" +apperances[i]);
+                }
             }
         }
     }
