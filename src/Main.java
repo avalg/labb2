@@ -3,27 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Factorize {
+public class Main {
     static int[] apperances;
     static int counter;
-    public static void main(String[] args) {
-        // read in the number
-        Scanner reader = new Scanner(System.in);
-        String s = reader.next();
-        while(!s.equals("0")) {
-            apperances = new int[30];
-            BigInteger n = new BigInteger(s);
-            List<BigInteger> answer = primeFactor(n);
-            counter = 0;
-
-            if (answer != null) {
-                for (int i = 0; i < answer.size(); i++) {
-                    System.out.println(answer.get(i)+ "^" +apperances[i]);
-                }
-            }
-        }
-    }
-
     private static List<BigInteger> addToAnswer(BigInteger b, List<BigInteger> answer) {
         if(answer.contains(b)){
             int i = answer.indexOf(b);
@@ -68,4 +50,23 @@ public class Factorize {
         return answer;
     }
 
+    public static void main(String[] args) {
+        Scanner reader = new Scanner(System.in);
+        String s = "";
+        while(!s.equals("0")) {
+            // read the number
+            s = reader.next();
+            apperances = new int[30];
+            BigInteger n = new BigInteger(s);
+            List<BigInteger> answer = primeFactor(n);
+            counter = 0;
+
+            if (answer != null) {
+                for (int i = 0; i < answer.size(); i++) {
+                    System.out.print(answer.get(i)+ "^" +apperances[i] + " ");
+                }
+                System.out.println("");
+            }
+        }
+    }
 }
