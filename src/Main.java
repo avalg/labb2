@@ -1,4 +1,3 @@
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +32,23 @@ public class Main {
             answer = addToAnswer(two, answer);
         }
 
-        //left with odd values
-        if (!n.equals(BigInteger.ONE)) {
-            BigInteger b = BigInteger.valueOf(3);
-            while (b.compareTo(n) < 0) {
-                if (b.isProbablePrime(10)) {
-                    BigInteger[] dr = n.divideAndRemainder(b);
-                    if (dr[1].equals(BigInteger.ZERO)) {
-                        answer = addToAnswer(b, answer);
-                        n = dr[0];
-                    }
+        for (int i = 0; i<50; i++) {
+            //left with odd values
+            BigInteger result = two;
+            result = pr(n);
+            //TODO result is prime maybe yes? Check if prime yes?
+            if (result.isProbablePrime(10)) {
+                n = n.divide(result);
+                int app = 1;
+                while (n.mod(result).equals(BigInteger.ZERO)) {
+                    app++;
+                    n = n.divide(result);
                 }
-                b = b.add(two);
+                answer.add(result);
+                apperances[counter] = app;
+                counter++;
             }
-            answer = addToAnswer(b, answer); //b will always be prime here...
         }
-
         return answer;
     }
 
@@ -58,12 +58,14 @@ public class Main {
         BigInteger x = new BigInteger(n.bitLength()-1, rand).add(BigInteger.ONE); //Subtract 1 to ensure x<n
         BigInteger y = x;
         long k = 2;
-
-        while(true) { //TODO avbryt loopen! for the love of god!!
+        long c = 0;
+        for (int j = 0; j<10000; j++) { //TODO avbryt loopen! for the love of god!!
             i++;
+            c++;
             x = x.pow(2).subtract(BigInteger.ONE).mod(n);
             BigInteger d = n.gcd(y.subtract(x));
-            if (!d.equals(BigInteger.ONE) && !d.equals(n)){
+            if (!d.equals(BigInteger.ONE)){
+                //System.out.println(c);
                 return d;
             }
             if (i == k) {
@@ -71,6 +73,7 @@ public class Main {
                 k = k*2;
             }
         }
+        return n;
     }
 
     public static void main(String[] args) {
@@ -78,6 +81,7 @@ public class Main {
         String s = "";
         while (!s.equals("0")) {
             // read the number
+            System.out.println("");
             s = reader.next();
             apperances = new int[30];
             BigInteger n = new BigInteger(s);
@@ -88,7 +92,6 @@ public class Main {
                 for (int i = 0; i < answer.size(); i++) {
                     System.out.print(answer.get(i) + "^" + apperances[i] + " ");
                 }
-                System.out.println("");
             }
         }
     }
