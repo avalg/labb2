@@ -1,6 +1,8 @@
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -50,10 +52,31 @@ public class Main {
         return answer;
     }
 
+    private static BigInteger pr(BigInteger n) {
+        long i = 1;
+        Random rand = new Random();
+        BigInteger x = new BigInteger(n.bitLength()-1, rand).add(BigInteger.ONE); //Subtract 1 to ensure x<n
+        BigInteger y = x;
+        long k = 2;
+
+        while(true) { //TODO avbryt loopen! for the love of god!!
+            i++;
+            x = x.pow(2).subtract(BigInteger.ONE).mod(n);
+            BigInteger d = n.gcd(y.subtract(x));
+            if (!d.equals(BigInteger.ONE) && !d.equals(n)){
+                return d;
+            }
+            if (i == k) {
+                y = x;
+                k = k*2;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
         String s = "";
-        while(!s.equals("0")) {
+        while (!s.equals("0")) {
             // read the number
             s = reader.next();
             apperances = new int[30];
@@ -63,7 +86,7 @@ public class Main {
 
             if (answer != null) {
                 for (int i = 0; i < answer.size(); i++) {
-                    System.out.print(answer.get(i)+ "^" +apperances[i] + " ");
+                    System.out.print(answer.get(i) + "^" + apperances[i] + " ");
                 }
                 System.out.println("");
             }
