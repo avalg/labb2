@@ -10,7 +10,7 @@ public class Factorize {
         // read in the number
         Scanner reader = new Scanner(System.in);
         String s = reader.next();
-        while(s != "0") {
+        while(!s.equals("0")) {
             apperances = new int[30];
             BigInteger n = s;
             List<BigInteger> answer = primeFactor(n);
@@ -35,7 +35,7 @@ public class Factorize {
     }
 
     private static List<BigInteger> primeFactor(BigInteger n){
-        List<BigInteger> answer = new ArrayList<BigInteger>();
+        List<BigInteger> answer = new ArrayList<>();
         BigInteger two = BigInteger.valueOf(2);
 
         if(n.compareTo(two) < 0){
