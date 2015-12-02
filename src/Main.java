@@ -1,8 +1,5 @@
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static int[] apperances;
@@ -89,6 +86,7 @@ public class Main {
             counter = 0;
 
             if (answer != null) {
+                Collections.sort(answer);
                 for (int i = 0; i < answer.size(); i++) {
                     System.out.print(answer.get(i) + "^" + apperances[i] + " ");
                 }
