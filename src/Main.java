@@ -2,16 +2,14 @@ import java.math.BigInteger;
 import java.util.*;
 
 public class Main {
-    static int[] apperances;
-    static int counter;
+    static HashMap<BigInteger, Integer> apperances;
+
     private static List<BigInteger> addToAnswer(BigInteger b, List<BigInteger> answer) {
         if(answer.contains(b)){
-            int i = answer.indexOf(b);
-            apperances[i]++;
+            apperances.put(b, apperances.get(b)+1);
         }else {
             answer.add(b);
-            apperances[counter] = 1;
-            counter++;
+            apperances.put(b, 1);
         }
         return answer;
     }
@@ -29,10 +27,9 @@ public class Main {
             answer = addToAnswer(two, answer);
         }
 
-        for (int i = 0; i<50; i++) {
+        while (n.compareTo(BigInteger.ONE)>0) {
             //left with odd values
-            BigInteger result = two;
-            result = pr(n);
+            BigInteger result = pr(n);
             //TODO result is prime maybe yes? Check if prime yes?
             if (result.isProbablePrime(10)) {
                 n = n.divide(result);
@@ -42,8 +39,7 @@ public class Main {
                     n = n.divide(result);
                 }
                 answer.add(result);
-                apperances[counter] = app;
-                counter++;
+                apperances.put(result, app);
             }
         }
         return answer;
@@ -55,14 +51,11 @@ public class Main {
         BigInteger x = new BigInteger(n.bitLength()-1, rand).add(BigInteger.ONE); //Subtract 1 to ensure x<n
         BigInteger y = x;
         long k = 2;
-        long c = 0;
         for (int j = 0; j<10000; j++) { //TODO avbryt loopen! for the love of god!!
             i++;
-            c++;
             x = x.pow(2).subtract(BigInteger.ONE).mod(n);
             BigInteger d = n.gcd(y.subtract(x));
             if (!d.equals(BigInteger.ONE)){
-                //System.out.println(c);
                 return d;
             }
             if (i == k) {
@@ -80,15 +73,13 @@ public class Main {
             // read the number
             System.out.println("");
             s = reader.next();
-            apperances = new int[30];
+            apperances = new HashMap<>();
             BigInteger n = new BigInteger(s);
             List<BigInteger> answer = primeFactor(n);
-            counter = 0;
-
             if (answer != null) {
                 Collections.sort(answer);
-                for (int i = 0; i < answer.size(); i++) {
-                    System.out.print(answer.get(i) + "^" + apperances[i] + " ");
+                for (BigInteger prime : answer) {
+                    System.out.print(prime + "^" + apperances.get(prime) + " ");
                 }
             }
         }
