@@ -27,11 +27,12 @@ public class Main {
             answer = addToAnswer(two, answer);
         }
 
+        int counter = 0;
         while (n.compareTo(BigInteger.ONE)>0) {
             //left with odd values
             BigInteger result = pr(n);
             //TODO result is prime maybe yes? Check if prime yes?
-            if (result.isProbablePrime(10)) {
+            if (millerRabin(result)) {
                 n = n.divide(result);
                 int app = 1;
                 while (n.mod(result).equals(BigInteger.ZERO)) {
@@ -65,6 +66,39 @@ public class Main {
         }
         return n;
     }
+
+    private static boolean millerRabin(BigInteger n){
+        Random rnd = new Random();
+        int counter = 0;
+        for(int i = 0; i < 20; i++) {
+            BigInteger a = new BigInteger(n.bitLength(), rnd);
+            while (a.equals(BigInteger.ZERO)) {
+                a = new BigInteger(n.bitLength(), rnd);
+            }
+            BigInteger nMinus = n.subtract(BigInteger.ONE);
+            int s = nMinus.getLowestSetBit();
+
+            a.modPow(nMinus.shiftRight(s), n);
+            if (a.equals(BigInteger.ONE)) {
+                break;
+            }
+            for (int j = 0; j < s - 1; j++) {
+                if (a.equals(nMinus)) {
+                    break;
+                }
+                a = a.multiply(a).mod(n);
+            }
+            if (a.equals(nMinus)){
+                break;
+            }
+            counter++;
+            if(counter > 10){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
