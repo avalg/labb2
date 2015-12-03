@@ -67,32 +67,75 @@ public class Main {
         return n;
     }
 
-    private static boolean millerRabin(BigInteger n){
+    private static BigInteger brent(BigInteger n) {
+        if (n.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO))
+            return BigInteger.valueOf(2);
         Random rnd = new Random();
-        int counter = 0;
-        for(int i = 0; i < 20; i++) {
-            BigInteger a = new BigInteger(n.bitLength(), rnd);
-            while (a.equals(BigInteger.ZERO)) {
-                a = new BigInteger(n.bitLength(), rnd);
-            }
-            BigInteger nMinus = n.subtract(BigInteger.ONE);
-            int s = nMinus.getLowestSetBit();
+        BigInteger x = new BigInteger(n.bitLength()-1, rnd).add(BigInteger.ONE);
+        BigInteger y = new BigInteger(n.bitLength()-1, rnd).add(BigInteger.ONE);
+        BigInteger z = new BigInteger(n.bitLength()-1, rnd).add(BigInteger.ONE);
+        BigInteger g = BigInteger.ONE;
+        BigInteger c = BigInteger.ONE;
+        BigInteger r = BigInteger.ONE;
+        BigInteger x1 = BigInteger.ONE;
+        BigInteger x2 = BigInteger.ONE;
+        BigInteger i = BigInteger.ZERO;
+        int stop = 0;
 
-            a.modPow(nMinus.shiftRight(s), n);
-            if (a.equals(BigInteger.ONE)) {
-                break;
+        while (g.equals(BigInteger.ONE)) {
+            if (stop > 10) return n;
+            stop++;
+            x1 = x;
+            while (i.compareTo(r)<0) {
+                x = x.pow(2).mod(n.add(y)).mod(n);
+                i = i.add(BigInteger.ONE);
             }
-            for (int j = 0; j < s - 1; j++) {
-                if (a.equals(nMinus)) {
-                    break;
+            BigInteger count = BigInteger.ZERO;
+            while(count.compareTo(r)<0 && g.equals(BigInteger.ONE)) {
+                x2 = x;
+                i = BigInteger.ZERO;
+                while (i.compareTo(z.min(r.subtract(count)))<0) {
+                    x = x.pow(2).mod(n.add(y)).mod(n);
+                    c = c.multiply(x.subtract(x1.subtract(x)).abs()).mod(n);
+                    i = i.add(BigInteger.ONE);
                 }
-                a = a.multiply(a).mod(n);
+                g = n.gcd(c);
+                count = count.add(z);
             }
-            if (a.equals(nMinus)){
-                break;
+            r = r.multiply(BigInteger.valueOf(2));
+        }
+        if (g.equals(n)) {
+            while(true) {
+                x2 = x2.pow(2).mod(n.add(y)).mod(n);
+                g = n.gcd(x1.subtract(x2).abs());
+                if (g.compareTo(BigInteger.ONE)>0) continue;
             }
-            counter++;
-            if(counter > 10){
+        }
+        return g;
+    }
+
+    private static boolean millerRabin(BigInteger n) {
+        BigInteger two = BigInteger.valueOf(2);
+        if (n.mod(two).equals(BigInteger.ZERO))
+            return false;
+
+        BigInteger s = n.subtract(BigInteger.ONE);
+        while (s.mod(two).equals(BigInteger.ZERO))
+            s = s.divide(two);
+
+        Random rand = new Random();
+        for (int i = 0; i < 20; i++) {
+            BigInteger nMinusOne = n.subtract(BigInteger.ONE);
+            BigInteger r = new BigInteger(n.bitLength(), rand);
+            BigInteger a = r.mod(nMinusOne).add(BigInteger.ONE);
+            BigInteger temp = s;
+            BigInteger m = a.modPow(temp, n); //(a ^ b) % c
+            while (!temp.equals(nMinusOne) && !m.equals(BigInteger.ONE) && !m.equals(nMinusOne)) {
+                BigInteger tmpMod = m;
+                m = tmpMod.multiply(tmpMod).mod(n);//mulMod(m, m, n);
+                temp.multiply(two);
+            }
+            if (!m.equals(nMinusOne) && temp.mod(two).equals(BigInteger.ZERO)) {
                 return false;
             }
         }
