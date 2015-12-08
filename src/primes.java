@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Created by saraf on 2015-12-08.
  */
-public class Primes1 {
+public class Primes {
 
     private static void primes(int n){
         ArrayList<Integer> list = new ArrayList<>();
